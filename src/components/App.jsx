@@ -7,7 +7,6 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: 'anonimous'
     }
   }
   componentDidMount() {
@@ -31,7 +30,7 @@ class App extends React.Component {
     return (
       <div>
         <SignIn name={this.state.name} uid={this.state.uid} />
-        <Rollout />
+        <Rollout uid={this.state.uid} />
       </div>
     )
   }
