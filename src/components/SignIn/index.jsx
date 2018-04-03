@@ -31,7 +31,7 @@ class SignIn extends React.Component {
   render() {
     return (
       <div>
-        <div>{this.props.name}</div>
+        <div>{this.props.name}, {this.props.uid}</div>
         <button onClick={this.signIn}>SignIn</button>
         <button onClick={this.signOut}>SignOut</button>
       </div>)
