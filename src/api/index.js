@@ -25,12 +25,10 @@ export default class Db {
     
     user.once('value')
     .then(snap => {
-      console.log(snap.events)
-      const userEvents = [...snap.val().events || [], newEventKey]
-      return {...snap.val(), userEvents}
+      const events = [...snap.val().events || [], newEventKey]
+      return {...snap.val(), events}
     })
     .then(userData => {
-      console.log(data, userData)
       updates[`/events/${newEventKey}`] = data;
       updates[`/users/${data.uid}`] = userData;
       firebase.db.ref().update(updates)
