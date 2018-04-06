@@ -1,38 +1,44 @@
-import { firebase } from '../firebase'
+import {firebase} from '../firebase';
 
 export default class Db {
-  users = firebase.db.ref('/users/')
-  auth = firebase.auth
-  
+  users = firebase.db.ref('/users/');
+  auth = firebase.auth;
+
   addUser = (uid, displayName, email, photoURL) => {
-    const user = firebase.db.ref(`/users/${uid}`)
+    const user = firebase.db.ref(`/users/${uid}`);
     user.once('value').then((snap) => {
       if (!snap.node) {
-        this.users.child(uid).set(
-          { displayName,
-            email,
-            events: [],
-            photoURL
-         })
+        this.users.child(uid).set({
+          displayName,
+          email,
+          events: [],
+          photoURL,
+        });
       }
-    })
-  }
+    });
+  };
 
   addEvent = (data) => {
-    const user = firebase.db.ref(`/users/${data.uid}`)
+    const user = firebase.db.ref(`/users/${data.uid}`);
     const newEventKey = firebase.db.ref('/events').push().key;
     const updates = {};
-    
-    user.once('value')
-    .then(snap => {
-      const events = [...snap.val().events || [], newEventKey]
-      return {...snap.val(), events}
-    })
-    .then(userData => {
-      updates[`/events/${newEventKey}`] = data;
-      updates[`/users/${data.uid}`] = userData;
-      firebase.db.ref().update(updates)
-    })
-    
-  }
+
+    user
+      .once('value')
+      .then((snap) => {
+        const events = [...(snap.val().events || []), newEventKey];
+        return {...snap.val(), events};
+      })
+      .then((userData) => {
+        updates[`/events/${newEventKey}`] = data;
+        updates[`/users/${data.uid}`] = userData;
+        firebase.db.ref().update(updates);
+      });
+  };
+  getEventsList = () => Promise.resolve( firebase.db
+    .ref('/events/')
+    .once('value')
+    .then((snap) => ({...snap.val()})))
+   
+  
 }
