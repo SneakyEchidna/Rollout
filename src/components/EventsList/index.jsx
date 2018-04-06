@@ -14,9 +14,10 @@ class EventsList extends React.Component {
     const db = new Db();
     db.getEventsList()
       .then(events => this.setState(events))
-    db.signTo('/events/', (snap) => {
-      this.setState(snap.val())
-    })
+      .then(db.signTo('/events/', (snap) => {
+        this.setState(snap.val())
+      }))
+
   }
 
   columns = ['Title', 'Event Type', 'Event Date'];
