@@ -3,6 +3,7 @@ import {firebase} from '../firebase';
 export default class Db {
   users = firebase.db.ref('/users/');
   auth = firebase.auth;
+  events = firebase.db.ref('/events/')
 
   addUser = (uid, displayName, email, photoURL) => {
     const user = firebase.db.ref(`/users/${uid}`);
@@ -35,10 +36,10 @@ export default class Db {
         firebase.db.ref().update(updates);
       });
   };
-  getEventsList = () => Promise.resolve( firebase.db
-    .ref('/events/')
+  getEventsList = () => Promise.resolve( 
+    this.events
     .once('value')
     .then((snap) => ({...snap.val()})))
    
-  
+  signTo = (route, cb) => {firebase.db.ref(route).on('value', cb())}
 }
