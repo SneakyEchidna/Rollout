@@ -1,7 +1,7 @@
 import React from 'react';
 import Db from '../../api';
 
-class EventsList extends React.Component{
+class EventsList extends React.Component {
   static renderSpiner() {
     return <div>....spiner</div>;
   }
@@ -10,13 +10,17 @@ class EventsList extends React.Component{
     return strings[event]
   }
   state = {}
-  componentWillMount(){
-   const db = new Db();
-   db.getEventsList()
-    .then(events => this.setState(events))
+  componentWillMount() {
+    const db = new Db();
+    db.getEventsList()
+      .then(events => this.setState(events))
+      .then(db.signTo('/events/', (snap) => {
+        this.setState(snap.val())
+      }))
+
   }
 
-columns = ['Title', 'Event Type', 'Event Date'];
+  columns = ['Title', 'Event Type', 'Event Date'];
 
   renderHeader() {
     return (
@@ -46,17 +50,17 @@ columns = ['Title', 'Event Type', 'Event Date'];
     );
   }
   renderEvents() {
-    return(
+    return (
       <table>
         {this.renderHeader()}
         {this.renderBody()}
       </table>
-      
+
     )
   }
- render(){
-   return this.state ? this.renderEvents() : EventsList.renderSpiner() 
- }
+  render() {
+    return this.state ? this.renderEvents() : EventsList.renderSpiner()
+  }
 }
 
 export default EventsList

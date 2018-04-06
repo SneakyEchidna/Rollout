@@ -1,8 +1,9 @@
-import {firebase} from '../firebase';
+import { firebase } from '../firebase';
 
 export default class Db {
   users = firebase.db.ref('/users/');
   auth = firebase.auth;
+  events = firebase.db.ref('/events/')
 
   addUser = (uid, displayName, email, photoURL) => {
     const user = firebase.db.ref(`/users/${uid}`);
@@ -27,7 +28,7 @@ export default class Db {
       .once('value')
       .then((snap) => {
         const events = [...(snap.val().events || []), newEventKey];
-        return {...snap.val(), events};
+        return { ...snap.val(), events };
       })
       .then((userData) => {
         updates[`/events/${newEventKey}`] = data;
@@ -35,10 +36,10 @@ export default class Db {
         firebase.db.ref().update(updates);
       });
   };
-  getEventsList = () => Promise.resolve( firebase.db
-    .ref('/events/')
-    .once('value')
-    .then((snap) => ({...snap.val()})))
-   
-  
+  getEventsList = () => Promise.resolve(
+    this.events
+      .once('value')
+      .then((snap) => ({ ...snap.val() })))
+
+  signTo = (route, cb) => { firebase.db.ref(route).on('value', cb) }
 }
